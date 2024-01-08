@@ -7,6 +7,8 @@
 
         /* LINE通知のリクエスト先 */
         private readonly System.String as1_BaseUrl = "https://notify-api.line.me/api/notify";
+        /* 認証トークン */
+        private readonly System.String as1_BearerToken = System.String.Empty;
 
         /* リクエストデータ */
         private System.Collections.Generic.Dictionary<System.String, System.String> as1_ReqData = new() {
@@ -16,22 +18,26 @@
         /***************************************************/
         /* 概要  : コンストラクタ                          */
         /***************************************************/
-        public LineNotify() { }
+        public LineNotify(System.String as1_a_BearerToken="") {
+
+            this.as1_BearerToken = as1_a_BearerToken;
+        }
 
 
         /***************************************************/
         /* 概要  : ライン通知送信                          */
         /***************************************************/
-        /* 引数1 : 認証トークン                            */
-        /* 引数2 : メッセージ                              */
+        /* 引数1 : メッセージ                              */
+        /* 引数2 : 認証トークン                            */
         /***************************************************/
-        public System.Boolean Send(System.String as1_a_BearerToken, System.String as1_a_Message) {
+        public System.Boolean Send(System.String as1_a_Message, System.String as1_a_BearerToken="") {
 
             /* リクエストデータを設定 */
             this.as1_ReqData["message"] = as1_a_Message;
+            System.String as1_t_key = ((as1_a_BearerToken == System.String.Empty) ? this.as1_BearerToken : as1_a_BearerToken);
+            if (as1_t_key == System.String.Empty) { return false; }
             /* 認証データを設定 */
-            System.String as1_t_authData = "Bearer " + as1_a_BearerToken;
-
+            System.String as1_t_authData = "Bearer " + as1_t_key;
 
             /* POSTリクエストのインスタンス生成 */
             System.Net.Http.HttpRequestMessage pvd_t_ReqInfo = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, this.as1_BaseUrl);
